@@ -38,6 +38,13 @@ curl http://localhost:8001/.well-known/agent-card.json
 adk web --port 8000
 ```
 
+- Agent 동작 확인
+```bash
+경비 에이전트(8001) 구동 상태에서 trip_coordinator 선택 후 확인
+3박4일 도쿄 출장 준비해줘 > 체크리스트 로컬 도구, 예산 A2A 호출 확인
+도쿄 호텔 1박 30만원인데 괜찮아? > 한도 초과와 사전 승인 안내
+```
+
 - 검증 완료 후 Gemini Enterprise 에 에이전트로 등록
 ```bash
 adk deploy agent_engine \
