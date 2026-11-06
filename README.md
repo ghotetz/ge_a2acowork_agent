@@ -14,7 +14,7 @@
 ```bash
 gcloud auth login
 gcloud auth application-default login
-gcloud config set project ax-gemini-lab
+gcloud config set project "gcp-project"
 ```
 
 - Google ADK 설치
@@ -53,3 +53,73 @@ adk deploy agent_engine \
   --display_name="에이전트명" \
   "에이전트 프로젝트 경로"
 ```
+# 📌 A2A Multi-Agent Cowork (Google ADK)
+
+> Collaboration between multiple agents over the A2A (Agent2Agent) protocol.
+>
+> A local agent discovers a remote agent through its **agent card** and calls it over A2A.
+
+## ⚡ Features
+
+- A trip-planning agent (General Affairs) works with an expense agent (Finance) to prepare business trips
+- Combines a local tool (trip checklist) with a remote A2A call (budget and expense-policy check)
+- Flags over-limit expenses and explains when pre-approval is required
+
+## 🛠 Tech Stack
+
+- Google ADK, A2A protocol, Uvicorn, Python, Gemini Enterprise
+
+## 💻 Getting Started
+
+### 1. Authenticate to Google Cloud
+
+```bash
+gcloud auth login
+gcloud auth application-default login
+gcloud config set project "gcp-project"
+```
+
+### 2. Install Google ADK
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install "google-adk[gcp]" litellm
+```
+
+### 3. Start the remote expense agent as an A2A server
+
+```bash
+cd a2a_lab
+set -a; source expense_agent/.env; set +a
+uvicorn expense_agent.agent:a2a_app --host localhost --port 8001
+
+# In another terminal, check the agent card
+curl http://localhost:8001/.well-known/agent-card.json
+```
+
+### 4. Run the trip agent locally (with the expense agent still running, in a separate terminal)
+
+```bash
+adk web --port 8000
+```
+
+### 5. Try it
+
+With the expense agent running on port 8001, select `trip_coordinator` in the ADK web UI.
+
+| Prompt | Expected behavior |
+| --- | --- |
+| Prepare a 4-day, 3-night business trip to Tokyo | Builds the checklist with a local tool and checks the budget via an A2A call |
+| A Tokyo hotel is ₩300,000 per night — is that OK? | Flags that it exceeds the limit and explains the pre-approval process |
+
+### 6. Deploy and register in Gemini Enterprise
+
+```bash
+adk deploy agent_engine \
+  --project="<project-id>" \
+  --region="<region>" \
+  --display_name="<agent-name>" \
+  "<path-to-agent-project>"
+```
+
+Once deployed to Vertex AI Agent Engine, register the agent in Gemini Enterprise.
