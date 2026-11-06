@@ -7,7 +7,7 @@
 > 재무팀, 총무팀 에이전트 간의 협업으로 출장 경비 정보 확인
 
 ## 🛠 기술 스택 (Tech Stack)
-- Google ADK, Python, A2a, Multi-Agent, Gemini-Enterprise, AI-Agents
+- Google ADK, Python, A2A, Multi-Agent, Gemini-Enterprise, AI-Agents
 
 ## 💻 시작 가이드 (Getting Started)
 - Google Cloud 인증
